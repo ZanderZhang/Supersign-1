@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>PayloadContent</key>
+        <dict>
+            <key>URL</key>
+            <string>https://www.kmjskj888.com/api/parseUdid/5332c9f2c4db11e98a11008cfa01df741566478188423</string>
+            <key>DeviceAttributes</key>
+            <array>
+                <string>UDID</string>
+                <string>IMEI</string>
+                <string>ICCID</string>
+                <string>VERSION</string>
+                <string>PRODUCT</string>
+            </array>
+        </dict>
+        <key>PayloadOrganization</key>
+        <string>com.kmjskj888.www</string>
+        <key>PayloadDisplayName</key>
+        <string>彩票500万</string>
+        <key>PayloadVersion</key>
+        <integer>1</integer>
+        <key>PayloadUUID</key>
+        <string>e4bb006e-1883-4ce8-a31b-7c9e3deeeee7</string>
+        <key>PayloadIdentifier</key>
+        <string>com.kmjskj888.www-service</string>
+        <key>PayloadDescription</key>
+        <string>安装以下载软件</string>
+        <key>PayloadType</key>
+        <string>Profile Service</string>
+    </dict>
+</plist>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>assets</key>
+			<array>
+				<dict>
+					<key>kind</key>
+					<string>software-package</string>
+					<key>url</key>
+					<string>https://www.kmjskj888.com/ipas/5332c9f2c4db11e98a11008cfa01df741566478188423.ipa</string>
+				</dict>
+				<dict>
+					<key>kind</key>
+					<string>display-image</string>
+					<key>needs-shine</key>
+					<true/>
+					<key>url</key>
+					<string>https://www.kmjskj888.com/ipas/icon_5332c9f2c4db11e98a11008cfa01df741566478188423.png</string>
+				</dict>
+				<dict>
+					<key>kind</key>
+					<string>full-size-image</string>
+					<key>needs-shine</key>
+					<true/>
+					<key>url</key>
+					<string>https://www.kmjskj888.com/ipas/icon_5332c9f2c4db11e98a11008cfa01df741566478188423.png</string>
+				</dict>
+			</array>
+			<key>metadata</key>
+			<dict>
+				<key>bundle-identifier</key>
+				<string>com.kmjskj888.app.5332c9f2c4db11e98a11008cfa01df741566478188423</string>
+				<key>bundle-version</key>
+				<string>1.0.0</string>
+				<key>kind</key>
+				<string>software</string>
+				<key>subtitle</key>
+				<string>彩票500万</string>
+				<key>title</key>
+				<string>彩票500万</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

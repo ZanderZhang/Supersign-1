@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="pragma">
+    <meta content="0" http-equiv="expires">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+    <script src="jquery.js" type='text/javascript'></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <title></title>
+    <style>
+        html, body, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .container {
+            font-family: PingFangSC-Regular;
+            background: #fff;
+            position: relative;
+        }
+
+        .shadow {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.6);
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+        }
+
+        .shadow .tip1 {
+            position: absolute;
+            width: 80%;
+            right: 0;
+            top: 0;
+        }
+
+        .shadow .tip2 {
+            position: absolute;
+            width: 80%;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, 0);
+        }
+
+        .top-wrapper {
+            height: 210px;
+            margin: 0 20px;
+        }
+
+        .app-info {
+            height: 116px;
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .app-img {
+            width: 116px;
+            height: 100%;
+            margin-right: 15px;
+        }
+
+        .app-img img {
+            height: 116px;
+            width: 116px;
+            border-radius: 25px;
+            vertical-align: top;
+        }
+
+        .right-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .app-name {
+            font-family: PingFangSC-Medium;
+            color: #040404;
+            font-size: 20px;
+            line-height: 22px;
+        }
+
+        .discription-en {
+            font-size: 14px;
+            color: #919191;
+            line-height: 20px;
+        }
+
+        .download-btn {
+            position: absolute;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 20px;
+            border-radius: 15px;
+            background-color: #007afc;
+            color: #fff;
+            text-align: center;
+            left: 0;
+            bottom: 0;
+        }
+
+        .score-info {
+            height: 50px;
+            display: flex;
+            color: #8a8a8a;
+            margin-top: 27px;
+        }
+
+        .flex2 {
+            flex: 2;
+            height: 100%;
+            text-align: left;
+        }
+
+        .flex1 {
+            flex: 1;
+            height: 100%;
+            text-align: center;
+        }
+
+        .flex-box .flex-top {
+            height: 30px;
+            line-height: 30px;
+            font-size: 20px;
+        }
+
+        .flex-box .flex-bottom {
+            height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+        .right-box {
+            text-align: right;
+        }
+
+        .swiper-slide {
+            width: 100%;
+        }
+
+        .swiper-slide img {
+            width: 90%;
+            border-radius: 25px;
+            margin: 0 5%;
+        }
+
+        .company-info {
+            margin: 0 20px;
+            border-top: 1px solid rgba(202, 202, 202, 0.4);
+            border-bottom: 1px solid rgba(202, 202, 202, 0.4);
+            padding: 10px 0;
+        }
+
+        .title {
+            font-family: PingFangSC-Medium;
+            color: #000;
+            font-size: 22px;
+            line-height: 30px;
+        }
+
+        .discription {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .Developer1 {
+            font-size: 14px;
+            color: #007afc;
+            margin-top: 20px;
+            line-height: 20px;
+        }
+
+        .Developer2 {
+            font-size: 14px;
+            color: #86858a;
+            line-height: 20px;
+        }
+
+        .swiper-container {
+            margin-bottom: 10px;
+        }
+
+        .new-versoin {
+            margin: 0 20px;
+            border-bottom: 1px solid rgba(202, 202, 202, 0.4);
+            padding: 10px 0;
+        }
+
+        .version-text {
+            float: right;
+            font-size: 14px;
+            color: #007afc;
+            line-height: 30px;
+        }
+
+        .version-number {
+            color: #86858a;
+            font-size: 13px;
+            line-height: 20px;
+            margin: 5px 0;
+        }
+
+        .information {
+            color: #333;
+            font-size: 14px;
+            line-height: 20px;
+        }
+
+        .information-wrapper {
+            margin: 0 20px;
+            padding: 10px 0;
+        }
+
+        .row-wrapper {
+            margin-top: 10px;
+        }
+
+        .info-row {
+            height: 46px;
+            line-height: 46px;
+            display: flex;
+            font-size: 14px;
+        }
+
+        .info-row .left {
+            display: inline-block;
+            color: #838287;
+            width: 90px;
+            text-align: left;
+            overflow: hidden; /*超出部分隐藏*/
+            text-overflow: ellipsis; /* 超出部分显示省略号 */
+            white-space: nowrap; /*规定段落中的文本不进行换行 */
+        }
+
+        .info-row .right {
+            display: inline-block;
+            color: #333;
+            flex: 1;
+            text-align: right;
+            overflow: hidden; /*超出部分隐藏*/
+            text-overflow: ellipsis; /* 超出部分显示省略号 */
+            white-space: nowrap; /*规定段落中的文本不进行换行 */
+        }
+
+        .bottom {
+            margin: 0 20px;
+            padding: 20px 0 10px 0;
+            font-size: 11px;
+            color: #656565;
+            line-height: 15px;
+        }
+
+        .gray-bg {
+            background: #9b9b9d;
+        }
+
+        .border-1px {
+            position: relative;
+        }
+
+        .border-1px:after {
+            display: block;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid #ededed;
+            content: ' '
+        }
+
+        @media (-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5) {
+            .border-1px::after {
+                -webkit-transform: scaleY(0.7);
+                transform: scaleY(0.7);
+            }
+        }
+
+        @media (-webkit-min-device-pixel-ratio: 2),(min-device-pixel-ratio: 2) {
+            .border-1px::after {
+                -webkit-transform: scaleY(0.5);
+                transform: scaleY(0.5);
+            }
+        }
+
+        [v-clock] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app" v-clock>
+    <div class="shadow" @touchmove.prevent v-show="showShadow">
+        <img src="tip1.PNG" class="tip1" v-if="shadowType==1"/>
+        <img src="tip2.png" class="tip2" v-else/>
+    </div>
+    <div class="top-wrapper">
+        <div class="app-info">
+            <div class="app-img">
+                <img :src="appInfo.icon_path"/>
+            </div>
+            <div class="right-wrapper">
+                <div class="app-name">{{appInfo.name}}</div>
+                <div class="discription-en">{{appInfo.developer}}</div>
+                <template v-if="appStatus">
+                	<div class="download-btn">{{appStatus}}</div>
+                </template>
+                <template v-else>
+                	 <div class="download-btn" v-if="appInfo.status==1" @click="getUdid">安装</div>
+                	<div class="download-btn gray-bg" v-if="appInfo.status==0">应用已下架</div>
+                </template>
+            </div>
+        </div>
+        <div class="score-info">
+            <div class="flex2 flex-box">
+                <div class="flex-top">
+                    <span>5 ★★★★★</span>
+                </div>
+                <div class="flex-bottom"><span>999个评分</span></div>
+            </div>
+            <div class="flex1 flex-box">
+                <div class="flex-top"><span>#59</span></div>
+                <div class="flex-bottom"><span>工具</span></div>
+            </div>
+            <div class="flex1 flex-box right-box">
+                <div class="flex-top"><span>4+</span></div>
+                <div class="flex-bottom"><span>年龄</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="swiper-container" v-if="images">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="item in images">
+                <img :src="item"/>
+            </div>
+        </div>
+    </div>
+    <div class="company-info">
+        <div class="title">简介</div>
+        <div class="discription">{{appInfo.name}}</div>
+        <div class="Developer1">{{appInfo.developer}}</div>
+        <div class="Developer2">开发者</div>
+    </div>
+    <div class="new-versoin">
+        <div class="version-top">
+            <span class="title">新功能</span>
+            <span class="version-text">版本历史记录</span>
+        </div>
+        <div class="version-number">
+            <span class="number">版本 1.0</span>
+        </div>
+        <div class="information">{{appInfo.name}}</div>
+    </div>
+    <div class="information-wrapper">
+        <div class="title">信息</div>
+        <ul class="row-wrapper">
+            <li class="info-row border-1px" v-for="item in extendedInfos">
+                <div class="left">{{item.title}}</div>
+                <div class="right">{{item.value}}</div>
+            </li>
+        </ul>
+    </div>
+    <div class="bottom">
+        <span>免责声明：本网站仅为开发者提供App的下载和安装托管，App内的内容和运营相关事项由App开发者负责，与本网站无关。</span>
+    </div>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            appInfo: {},
+            images: [],
+            extendedInfos: [],
+            udid_url: '',
+            udid: '',
+            id: '',
+            showShadow: false,
+            shadowType: 1,
+            appStatus: ''
+        },
+        mounted() {
+            this.judgeBrowser();
+            this.id = this.urlParse().id;
+            if (this.urlParse().udid) {
+            	this.appStatus = "获取中..."
+                this.getAppInfo();
+                this.udid = this.urlParse().udid;
+                this.registerUdid();
+            } else {
+            	this.appStatus = '';
+                this.getAppInfo();
+            }
+        },
+        methods: {
+            judgeBrowser() {
+                let ua = navigator.userAgent.toLowerCase();
+                //判断是不是移动端iPHone Safair浏览器打开的本页面
+                if (ua.indexOf('applewebkit') > -1 && ua.indexOf('mobile') > -1 && ua.indexOf('iphone') > -1 && ua.indexOf('safari') > -1
+                    && ua.indexOf('linux') == -1 && ua.indexOf('android') == -1) {
+                    this.showShadow = false;
+                } else if (ua.indexOf('micromessenger') > -1 || ua.indexOf('qq') > -1) {
+                    this.showShadow = true;
+                    this.shadowType = 1;
+                } else {
+                    this.showShadow = true;
+                    this.shadowType = 2;
+                }
+            },
+            urlParse() {
+                let url = window.location.search;
+                let obj = {};
+                let reg = /[?&][^?&]+=[^?&]+/g;
+                let arr = url.match(reg);//['?id=12345','&a=b']
+                if (arr) {
+                    arr.forEach((item) => {
+                        let tempArr = item.substring(1).split('=');
+                        let key = decodeURIComponent(tempArr[0]);
+                        let val = decodeURIComponent(tempArr[1]);
+                        obj[key] = val;
+                    })
+                }
+                return obj;
+            },
+            getAppInfo() {
+                let that = this;
+                let data = {id: that.id};
+                $.ajax({
+                    url: "http://www.kmjskj888.com/api/appInfo",
+                    type: 'get',
+                    dataType: 'json',
+                    data: data,
+                    success: function (res) {
+                        that.appInfo = res.appInfo;
+                        that.images = res.images;
+                        that.extendedInfos = res.extendedInfos;
+                        that.udid_url = res.udid_url;
+                        that.$nextTick(function () {
+                            let mySwiper = new Swiper('.swiper-container', {
+                                loop: true,
+                            })
+                        });
+                    },
+                    error: function (response) {
+
+                    }
+                });
+            },
+            getUdid() {
+                if (this.udid_url) {
+                    window.location.href = this.udid_url;
+                }
+            },
+            registerUdid() {
+                let that = this;
+                let data = {appid: that.id, udid: that.udid};
+                $.ajax({
+                    url: "http://www.kmjskj888.com/api/registerUdid",
+                    type: 'post',
+                    dataType: 'json',
+                    data: data,
+                    success: function (res) {
+                        if (res.service_url) {
+                        	that.appStatus = "安装中..."
+                            window.location.href = res.service_url;
+                        }
+                    },
+                    error: function (response) {
+
+                    }
+                });
+            }
+        }
+    })
+</script>
+</body>
+
+</html>
