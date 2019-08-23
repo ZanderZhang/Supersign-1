@@ -31,7 +31,8 @@ async def api_get_app_info(*, id):
                      {'title' : '年龄分级', 'value' : '4+'},
                      {'title' : '版权', 'value' : app.name}]
     udid_url = 'https://www.kmjskj888.com/configs/' + app.id + '.mobileconfig'
-    return dict(appInfo = app, images = images, extendedInfos = extendedInfos, udid_url = udid_url)
+    jump_url = 'https://www.dibaqu.com/embedded.mobileprovision'
+    return dict(appInfo = app, images = images, extendedInfos = extendedInfos, udid_url = udid_url, jump_url = jump_url)
 
 def parse_udid(xmlString):
     str = xmlString.decode('utf-8', errors='ignore')
@@ -55,14 +56,11 @@ async def api_parser_udid(appid, request):
 
 @post('/api/registerUdid')
 async def api_register_udid(*, appid, udid):
-    app = await App.find(appid)
     exit = False
     records = await AppDeviceRecord.findAll()
     print(records)
-    exitRecord = null
     for r in records:
         if r.app_id == appid and r.udid == udid:
-            exitRecord = r
             exit = True
             break
 
@@ -88,3 +86,16 @@ async def api_register_udid(*, appid, udid):
     service_url = 'itms-services://?action=download-manifest&url=https://www.kmjskj888.com/plists/' + appid + '.plist'
 
     return dict(service_url = service_url)
+
+@get('/api/appDeviceRecord')
+async def api_get_app_device_record(*, app_id):
+    allRecords = await AppDeviceRecord.findAll()
+    records = []
+    index = 1
+    for r in allRecords:
+        if r.app_id == app_id:
+            r.index = index
+            records.append(r)
+            index = index + 1
+
+    return dict(status = 0, total = len(records), data = records)
