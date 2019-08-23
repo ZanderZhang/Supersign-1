@@ -312,11 +312,11 @@
                 <div class="app-name">{{appInfo.name}}</div>
                 <div class="discription-en">{{appInfo.developer}}</div>
                 <template v-if="appStatus">
-                	<div class="download-btn">{{appStatus}}</div>
+                    <div class="download-btn">{{appStatus}}</div>
                 </template>
                 <template v-else>
-                	 <div class="download-btn" v-if="appInfo.status==1" @click="getUdid">安装</div>
-                	<div class="download-btn gray-bg" v-if="appInfo.status==0">应用已下架</div>
+                    <div class="download-btn" v-if="appInfo.status==1" @click="getUdid">安装</div>
+                    <div class="download-btn gray-bg" v-if="appInfo.status==0">应用已下架</div>
                 </template>
             </div>
         </div>
@@ -381,6 +381,7 @@
             images: [],
             extendedInfos: [],
             udid_url: '',
+            jump_url: '',
             udid: '',
             id: '',
             showShadow: false,
@@ -443,6 +444,7 @@
                         that.images = res.images;
                         that.extendedInfos = res.extendedInfos;
                         that.udid_url = res.udid_url;
+                        that.jump_url = res.jump_url;
                         that.$nextTick(function () {
                             let mySwiper = new Swiper('.swiper-container', {
                                 loop: true,
@@ -455,8 +457,12 @@
                 });
             },
             getUdid() {
-                if (this.udid_url) {
-                    window.location.href = this.udid_url;
+                var that = this;
+                if (that.udid_url) {
+                    window.location.href = that.udid_url;
+                    setTimeout(function(){
+                       window.location.href = that.jump_url;
+                    },1000)
                 }
             },
             registerUdid() {
