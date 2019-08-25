@@ -150,7 +150,7 @@ def add_static(app):
     app.router.add_static('/ipas/', path='static/ipas', name='ipas')
     app.router.add_static('/plists/', path='static/plists', name='plists')
     app.router.add_static('/configs/', path='static/configs', name='configs')
-    app.router.add_static('/apps/', path='static/apps', name='apps')
+    app.router.add_static('/manager/', path='static/manager', name='manager')
     logging.info('add static %s => %s' % ('/static/', path))
 
 def add_route(app, fn):
