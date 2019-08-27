@@ -6,22 +6,59 @@ __author__ = 'Michael Liao'
 ' url handlers '
 
 import re, time, json, logging, hashlib, base64, asyncio, os
-
+from sign import get_signed_service_url
 from coroweb import get, post
 
-from models import App, AppDeviceRecord, next_id
+from models import App, AppDeviceRecord, Account
+
+@get('/api/test')
+async def api_test(*, appid, udid):
+    url = await get_signed_service_url(appid, udid)
+
+    return dict(url = url)
 
 @get('/api/saveApp')
-async def api_save_app_info(*, id):
-    app = App(name = '彩票500万', status = 1, size = 5.2)
+async def api_save_app_info(*, name, size):
+    app = App(name = name, size = size, status = 1)
+
     await app.save()
 
-    return dict()
+    return dict(app = app)
+
+@get('/api/updateApp')
+async def api_update_app_info(*, app_id, app_name):
+    app = await App.find(app_id)
+    app.name = app_name
+    await app.update()
+
+    return dict(app = app)
+
+@get('/api/allApp')
+async def api_get_all_app():
+    apps = await App.findAll()
+
+    return dict(apps = apps)
+
+@get('/api/allAccount')
+async def api_get_all_account():
+    accounts = await Account.findAll()
+    for a in accounts:
+        a.password = '******'
+
+    return dict(accounts = accounts)
+
+@get('/api/saveAccount')
+async def api_save_account_info(*, account, password, count):
+    account = Account(account = account, password = password, surplus_count = count)
+
+    await account.save()
+
+    return dict(account = account)
 
 @get('/api/appInfo')
 async def api_get_app_info(*, id):
     app = await App.find(id)
-    app.icon_path = 'https://www.kmjskj888.com/images/icon_' + app.id + '.png'
+    app.icon_path = 'https://www.kmjskj888.com/images/icon_' + id + '.png'
     images = ['http://www.kmjskj888.com/resource/image/slide_1.png', 'http://www.kmjskj888.com/resource/image/slide_2.png']
     extendedInfos = [{'title' : '开发商', 'value' : app.developer},
                      {'title' : '大小', 'value' : str(app.size) + 'MB'},
@@ -56,34 +93,7 @@ async def api_parser_udid(appid, request):
 
 @post('/api/registerUdid')
 async def api_register_udid(*, appid, udid):
-    exit = False
-    records = await AppDeviceRecord.findAll()
-    print(records)
-    for r in records:
-        if r.app_id == appid and r.udid == udid:
-            exit = True
-            break
-
-    account = 'zdn59v@163.com'
-    password = 'Weak4367'
-
-    if exit:
-        pass
-    else:
-        bundle_id = "com.kmjskj888.app." + appid
-        rubyStr = 'ruby static/sign/download.rb 0 ' + account + ' ' + password + ' ' + udid + ' ' + appid + ' '+ bundle_id
-        os.system(rubyStr)
-
-        loginStr = "static/sign/ausign -email 'zdn59v@163.com' -p 'Weak4367'"
-        os.system(loginStr)
-
-        resignStr = "static/sign/ausign -sign static/ipas/" + appid + ".ipa -c static/sign/Certificates.p12 -m static/sign/ios.mobileprovision -p '' -o static/ipas/" + appid + ".ipa -id " + bundle_id
-        os.system(resignStr)
-
-        record = AppDeviceRecord(app_id = appid, udid = udid)
-        await record.save()
-
-    service_url = 'itms-services://?action=download-manifest&url=https://www.kmjskj888.com/plists/' + appid + '.plist'
+    service_url = await get_signed_service_url(appid, udid)
 
     return dict(service_url = service_url)
 

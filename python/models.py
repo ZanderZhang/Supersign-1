@@ -29,6 +29,7 @@ class AppDeviceRecord(Model):
     id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
     app_id = StringField(ddl='varchar(50)')
     udid = StringField(ddl='varchar(50)')
+    ipa_name = StringField(ddl='varchar(100)')
 
 class Account(Model):
     __table__ = 'account'
@@ -37,3 +38,12 @@ class Account(Model):
     account = StringField(ddl='varchar(50)')
     password = StringField(ddl='varchar(50)')
     surplus_count = IntegerField(default=100)
+    add_time = FloatField(default=int(time.time() * 1000))
+
+class AppAccountRecord(Model):
+    __table__ = 'app_account_record'
+
+    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
+    app_id = StringField(ddl='varchar(50)')
+    account_id = StringField(ddl='varchar(50)')
+    ipa_name = StringField(ddl='varchar(100)')
