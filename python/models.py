@@ -22,6 +22,9 @@ class App(Model):
     status = FloatField(default=0)
     size = FloatField(default=0)
     developer = StringField(default='AppleDeveloper')
+    add_time = FloatField(default=0)
+    surplus_count = IntegerField(default=100)
+    installed_count = IntegerField(default=0)
 
 class AppDeviceRecord(Model):
     __table__ = 'app_device_record'
@@ -30,6 +33,8 @@ class AppDeviceRecord(Model):
     app_id = StringField(ddl='varchar(50)')
     udid = StringField(ddl='varchar(50)')
     ipa_name = StringField(ddl='varchar(100)')
+    models = StringField(ddl='varchar(100)')
+    add_time = FloatField(default=0)
 
 class Account(Model):
     __table__ = 'account'
@@ -38,7 +43,7 @@ class Account(Model):
     account = StringField(ddl='varchar(50)')
     password = StringField(ddl='varchar(50)')
     surplus_count = IntegerField(default=100)
-    add_time = FloatField(default=int(time.time() * 1000))
+    add_time = FloatField(default=0)
 
 class AppAccountRecord(Model):
     __table__ = 'app_account_record'

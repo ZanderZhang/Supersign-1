@@ -38,9 +38,15 @@ async def save_app_account_record(account_id, app_id, ipa_name):
 
 
 async def save_app_device_record(app_id, udid, ipa_name):
-    record = AppDeviceRecord(app_id = app_id, udid = udid, ipa_name = ipa_name)
+    record = AppDeviceRecord(app_id = app_id, udid = udid, ipa_name = ipa_name, add_time = int(time.time() * 1000))
 
     await record.save()
+
+async def increasing_app_count(app_id):
+    app = App.find(app_id)
+    app.surplus_count = app.surplus_count - 1
+    app.installed_count = app.installed_count + 1
+    await app.update()
 
 def create_new_plist(app_id, ipa_name, app_name):
     plist_path = 'static/plists/' + ipa_name + '.plist'
@@ -118,7 +124,8 @@ async def get_signed_service_url(appid, udid):
                 flie.close()
 
         await save_app_device_record(appid, udid, new_ipa_name)
-
+        await increasing_app_count(appid)
+        
     if new_ipa_name is None:
         new_ipa_name = appid
 

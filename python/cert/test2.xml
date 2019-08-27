@@ -1,9 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
 <plist version="1.0">
     <dict>
         <key>PayloadContent</key>
         <dict>
             <key>URL</key>
-            <string>https://www.kmjskj888.com/api/parseUdid/14ca57f0c8ca11e9a0c5008cfa01df741566910586926</string>
+            <string>https://www.kmjskj888.com/api/parseUdid/8846e21cc6ee11e9afa3008cfa01df741566706340237</string>
             <key>DeviceAttributes</key>
             <array>
                 <string>UDID</string>
@@ -16,11 +17,11 @@
         <key>PayloadOrganization</key>
         <string>com.kmjskj888.www</string>
         <key>PayloadDisplayName</key>
-        <string>牛牛配资</string>
+        <string>哈哈哈哈</string>
         <key>PayloadVersion</key>
         <integer>1</integer>
         <key>PayloadUUID</key>
-        <string>6233d97f-11d9-4101-b48d-62181ad289cd</string>
+        <string>c9d9100a-5c5d-49a3-955d-47668315b47d</string>
         <key>PayloadIdentifier</key>
         <string>com.kmjskj888.www-service</string>
         <key>PayloadDescription</key>
