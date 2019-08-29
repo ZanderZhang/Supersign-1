@@ -35,6 +35,7 @@ class AppDeviceRecord(Model):
     ipa_name = StringField(ddl='varchar(100)')
     models = StringField(ddl='varchar(100)')
     add_time = FloatField(default=0)
+    available = IntegerField(default=0)     # 0初始状态  2被封  1被封后重新签名
 
 class Account(Model):
     __table__ = 'account'
