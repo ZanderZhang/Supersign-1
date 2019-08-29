@@ -76,7 +76,7 @@ async def get_signed_service_url(appid, udid):
             break
 
     # 该设备已经下载过该App，直接给包
-    if exitRecord != None:
+    if exitRecord != None and exitRecord.available != 2:
         new_ipa_name = exitRecord.ipa_name
     else:
         current_account = await get_current_account()
@@ -124,7 +124,10 @@ async def get_signed_service_url(appid, udid):
                 flie.close()
 
         await save_app_device_record(appid, udid, new_ipa_name)
-        await increasing_app_count(appid)
+        # await increasing_app_count(appid)
+        if exitRecord.available == 2:
+        	exitRecord.available == 1
+        	await exitRecord.update()
         
     if new_ipa_name is None:
         new_ipa_name = appid
