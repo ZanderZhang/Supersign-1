@@ -5,17 +5,14 @@ __author__ = 'Michael Liao'
 
 ' url handlers '
 
-import re, time, json, logging, hashlib, base64, asyncio, os
+import re, time, json, logging, hashlib, base64, asyncio, os, uuid
+import xml.etree.cElementTree as ET
 from sign import get_signed_service_url
 from coroweb import get, post
-
 from models import App, AppDeviceRecord, Account
 
-@get('/api/test')
-async def api_test(*, appid, udid):
-    url = await get_signed_service_url(appid, udid)
-
-    return dict(url = url)
+def get_current_time():
+    return int(time.time() * 1000)
 
 @get('/api/saveApp')
 async def api_save_app_info(*, name, size):
@@ -49,7 +46,7 @@ async def api_get_all_account():
 
 @get('/api/saveAccount')
 async def api_save_account_info(*, account, password, count):
-    account = Account(account = account, password = password, surplus_count = count)
+    account = Account(account = account, password = password, surplus_count = count, add_time = get_current_time())
 
     await account.save()
 
@@ -64,7 +61,7 @@ async def api_get_app_info(*, id):
                      {'title' : '大小', 'value' : str(app.size) + 'MB'},
                      {'title' : '类别', 'value' : '工具'},
                      {'title' : '兼容性', 'value' : '需要iOS 9.0 或更高版本'},
-                     {'title' : '语言', 'value' : 'En'},
+                     {'title' : '语言', 'value' : '简体中文'},
                      {'title' : '年龄分级', 'value' : '4+'},
                      {'title' : '版权', 'value' : app.name}]
     udid_url = 'https://www.kmjskj888.com/configs/' + app.id + '.mobileconfig'
@@ -87,7 +84,7 @@ async def api_parser_udid(appid, request):
     if xmlString:
         udid = parse_udid(xmlString)
 
-    location = 'http://www.kmjskj888.com/app.html?id=' + appid + '&udid=' + udid
+    location = 'https://www.kmjskj888.com/manager/app.html?id=' + appid + '&udid=' + udid
 
     return dict(Location = location)
 
