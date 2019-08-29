@@ -23,8 +23,8 @@ class App(Model):
     size = FloatField(default=0)
     developer = StringField(default='AppleDeveloper')
     add_time = FloatField(default=0)
-    surplus_count = IntegerField(default=100)
-    installed_count = IntegerField(default=0)
+    buy_count = IntegerField(default=0)
+    slide_images = StringField(ddl='varchar(100)')
 
 class AppDeviceRecord(Model):
     __table__ = 'app_device_record'
