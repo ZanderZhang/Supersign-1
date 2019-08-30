@@ -59,7 +59,10 @@ async def api_update_app_info(*, app_id, app_name):
 @get('/api/allApp')
 async def api_get_all_app():
     apps = await App.findAll()
-
+    for app in apps:
+        recordCount = await AppDeviceRecord.findNumber('count(id)', where="app_id = '" + app.id + "'")
+        app.installed_count = recordCount
+    
     return dict(apps = apps)
 
 @get('/api/allAccount')
