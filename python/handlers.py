@@ -59,7 +59,10 @@ async def api_save_account_info(*, account, password, count):
 async def api_get_app_info(*, id):
     app = await App.find(id)
     app.icon_path = 'https://www.kmjskj888.com/images/icon_' + id + '.png'
-    images = ['http://www.kmjskj888.com/resource/image/slide_1.png', 'http://www.kmjskj888.com/resource/image/slide_2.png']
+    if app.slide_images != None:
+        images = ['https://www.kmjskj888.com/images/' + app.slide_images]
+    else:
+        images = ['http://www.kmjskj888.com/resource/image/slide_1.png', 'http://www.kmjskj888.com/resource/image/slide_2.png']
     extendedInfos = [{'title' : '开发商', 'value' : app.developer},
                      {'title' : '大小', 'value' : str(app.size) + 'MB'},
                      {'title' : '类别', 'value' : '工具'},

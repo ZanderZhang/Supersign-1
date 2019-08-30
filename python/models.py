@@ -24,7 +24,9 @@ class App(Model):
     developer = StringField(default='AppleDeveloper')
     add_time = FloatField(default=0)
     buy_count = IntegerField(default=100)
-
+    slide_images = StringField(ddl='varchar(100)')
+    is_prt = IntegerField(default=0)
+    
 class AppDeviceRecord(Model):
     __table__ = 'app_device_record'
 
@@ -44,6 +46,7 @@ class Account(Model):
     password = StringField(ddl='varchar(50)')
     surplus_count = IntegerField(default=100)
     add_time = FloatField(default=0)
+    is_prt = IntegerField(default=0)
 
 class AppAccountRecord(Model):
     __table__ = 'app_account_record'

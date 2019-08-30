@@ -7,13 +7,13 @@ import os, time, plistlib
 from models import App, AppDeviceRecord, Account, AppAccountRecord
 
 # 查找当前可用账号
-async def get_current_account():
+async def get_current_account(is_prt):
     accounts = await Account.findAll()
     accounts = sorted(accounts, key=lambda a:a.add_time)
 
     current_account = None
     for a in accounts:
-        if a.surplus_count > 0:
+        if a.surplus_count > 0 and a.is_prt == is_prt:
             current_account = a
             break
 
@@ -73,7 +73,8 @@ async def get_signed_service_url(appid, udid):
     if exitRecord != None and exitRecord.available != 2:
         new_ipa_name = exitRecord.ipa_name
     else:
-        current_account = await get_current_account()
+        app = await App.find(appid)
+        current_account = await get_current_account(app.is_prt)
         if current_account is None:
             return ''
 
@@ -92,11 +93,14 @@ async def get_signed_service_url(appid, udid):
             bundle_id = "com.kmjskj888.app." + new_ipa_name
             await save_app_account_record(current_account.id, appid, new_ipa_name)
             # 生成plist
-            app = await App.find(appid)
             create_new_plist(appid, new_ipa_name, app.name)
 
+        if app.is_prt == 1:
+        	download = 'download_prt'
+        else:
+        	download = 'download'
         # 往苹果后台注册 udid
-        register_udid_script = 'ruby static/sign/download.rb ' + need_create_new_app + ' ' + current_account.account + ' ' + current_account.password + ' ' + udid + ' ' + appid + ' '+ bundle_id
+        register_udid_script = 'ruby static/sign/' + download + '.rb ' + need_create_new_app + ' ' + current_account.account + ' ' + current_account.password + ' ' + udid + ' ' + appid + ' '+ bundle_id
         os.system(register_udid_script)
 
         # 登录签名脚本
@@ -117,10 +121,12 @@ async def get_signed_service_url(appid, udid):
             if flie != None:
                 flie.close()
 
-        await save_app_device_record(appid, udid, new_ipa_name)
-        if exitRecord.available == 2:
-        	exitRecord.available == 1
-        	await exitRecord.update()
+        if exitRecord != None and exitRecord.available == 2:
+            exitRecord.available = 1
+            exitRecord.ipa_name = new_ipa_name
+            await exitRecord.update()
+        else:
+            await save_app_device_record(appid, udid, new_ipa_name)
         
     if new_ipa_name is None:
         new_ipa_name = appid
