@@ -405,6 +405,7 @@
             udid_url: '',
             jump_url: '',
             udid: '',
+            models: '',
             id: '',
             showShadow: false,
             shadowType: 1,
@@ -420,6 +421,7 @@
                 // this.appStatus = "获取中...";
                 this.getAppInfo();
                 this.udid = this.urlParse().udid;
+                this.models = this.urlParse().models;
                 this.initProgress();
                 this.registerUdid();
             } else {
@@ -495,7 +497,7 @@
             },
             registerUdid() {
                 var that = this;
-                var data = {appid: that.id, udid: that.udid};
+                var data = {appid: that.id, udid: that.udid, models: that.models};
                 $.ajax({
                     url: "https://www.kmjskj888.com/api/registerUdid",
                     type: 'post',

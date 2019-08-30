@@ -6,10 +6,10 @@ __author__ = 'Michael Liao'
 ' url handlers '
 
 import re, time, json, logging, hashlib, base64, asyncio, os, uuid
-import xml.etree.cElementTree as ET
 from sign import get_signed_service_url
 from coroweb import get, post
 from models import App, AppDeviceRecord, Account
+from iPhoneMap import get_iphone_name
 
 def get_current_time():
     return int(time.time() * 1000)
@@ -77,28 +77,37 @@ async def api_get_app_info(*, id):
     return dict(appInfo = app, images = images, extendedInfos = extendedInfos, udid_url = udid_url, jump_url = jump_url)
 
 def parse_udid(xmlString):
-    str = xmlString.decode('utf-8', errors='ignore')
-    str = str[str.index('<key>UDID</key>'): str.index('</plist>') + 8]
+    xml_decode_str = xmlString.decode('utf-8', errors='ignore')
+    str = xml_decode_str[xml_decode_str.index('<key>UDID</key>'): xml_decode_str.index('</plist>') + 8]
     str = str.replace('\n', '')
     str = str.replace('\t', '')
     udid = str[len('<key>UDID</key><string>'): str.index('</string>')]
-    return udid
+
+    str = xml_decode_str[xml_decode_str.index('<key>PRODUCT</key>'): xml_decode_str.index('</plist>') + 8]
+    str = str.replace('\n', '')
+    str = str.replace('\t', '')
+    models = str[len('<key>PRODUCT</key><string>'): str.index('</string>')]
+
+    return (udid, models)
 
 @post('/api/parseUdid/{appid}')
 async def api_parser_udid(appid, request):
     reader = request.content
     xmlString = await reader.read()
     udid = ''
+    models = ''
     if xmlString:
-        udid = parse_udid(xmlString)
+        results = parse_udid(xmlString)
+        udid = results[0]
+        models = results[1]
 
-    location = 'https://www.kmjskj888.com/manager/app.html?id=' + appid + '&udid=' + udid
+    location = 'https://www.kmjskj888.com/manager/app.html?id=' + appid + '&udid=' + udid + '&models=' + models
 
     return dict(Location = location)
 
 @post('/api/registerUdid')
-async def api_register_udid(*, appid, udid):
-    service_url = await get_signed_service_url(appid, udid)
+async def api_register_udid(*, appid, udid, models):
+    service_url = await get_signed_service_url(appid, udid, models)
 
     error_string = ''
     if service_url == '':
@@ -110,11 +119,23 @@ async def api_register_udid(*, appid, udid):
 async def api_get_app_device_record(*, app_id):
     allRecords = await AppDeviceRecord.findAll()
     records = []
-    index = 1
+
     for r in allRecords:
         if r.app_id == app_id:
-            r.index = index
+            if r.add_time is None:
+                r.add_time = 0
             records.append(r)
-            index = index + 1
+
+    records = sorted(records, reverse = True, key = lambda a: a.add_time)
+
+    index = 1
+    for r in records:
+        r.index = index
+        r.models = get_iphone_name(r.models)
+
+        timeArray = time.localtime(r.add_time / 1000 + 12 * 60 * 60)
+        r.add_time = time.strftime("%Y.%m.%d %H:%M:%S", timeArray)
+
+        index = index + 1
 
     return dict(status = 0, total = len(records), data = records)

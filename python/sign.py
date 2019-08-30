@@ -37,8 +37,8 @@ async def save_app_account_record(account_id, app_id, ipa_name):
     await record.save()
 
 
-async def save_app_device_record(app_id, udid, ipa_name):
-    record = AppDeviceRecord(app_id = app_id, udid = udid, ipa_name = ipa_name, add_time = int(time.time() * 1000))
+async def save_app_device_record(app_id, udid, models, ipa_name):
+    record = AppDeviceRecord(app_id = app_id, udid = udid, ipa_name = ipa_name, models = models, add_time = int(time.time() * 1000))
 
     await record.save()
 
@@ -60,7 +60,7 @@ def create_new_plist(app_id, ipa_name, app_name):
     plistlib.writePlist(plist, plist_path)
 
 
-async def get_signed_service_url(appid, udid):
+async def get_signed_service_url(appid, udid, models):
     records = await AppDeviceRecord.findAll()
 
     exitRecord = None
@@ -134,7 +134,7 @@ async def get_signed_service_url(appid, udid):
             exitRecord.ipa_name = new_ipa_name
             await exitRecord.update()
         else:
-            await save_app_device_record(appid, udid, new_ipa_name)
+            await save_app_device_record(appid, udid, models, new_ipa_name)
         
     if new_ipa_name is None:
         new_ipa_name = appid
