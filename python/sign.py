@@ -74,6 +74,14 @@ async def get_signed_service_url(appid, udid):
         new_ipa_name = exitRecord.ipa_name
     else:
         app = await App.find(appid)
+
+        # 没安装过如果下载数满了不能再签名
+        if exitRecord is None:
+            # 设备数满不能在安装
+            installed_count = await AppDeviceRecord.findNumber('count(id)', where="app_id = '" + app.id + "'")
+            if installed_count >= app.buy_count:
+                return ''
+
         current_account = await get_current_account(app.is_prt)
         if current_account is None:
             return ''

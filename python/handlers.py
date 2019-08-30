@@ -16,7 +16,7 @@ def get_current_time():
 
 @get('/api/saveApp')
 async def api_save_app_info(*, name, size):
-    app = App(name = name, size = size, status = 1)
+    app = App(name = name, size = size, status = 1, add_time = get_current_time())
 
     await app.save()
 
@@ -33,11 +33,13 @@ async def api_update_app_info(*, app_id, app_name):
 @get('/api/allApp')
 async def api_get_all_app():
     apps = await App.findAll()
+    total_install_count = 0
     for app in apps:
         recordCount = await AppDeviceRecord.findNumber('count(id)', where="app_id = '" + app.id + "'")
         app.installed_count = recordCount
+        total_install_count = total_install_count + recordCount
     
-    return dict(apps = apps)
+    return dict(total_install_count = total_install_count, apps = apps)
 
 @get('/api/allAccount')
 async def api_get_all_account():
@@ -98,7 +100,11 @@ async def api_parser_udid(appid, request):
 async def api_register_udid(*, appid, udid):
     service_url = await get_signed_service_url(appid, udid)
 
-    return dict(service_url = service_url)
+    error_string = ''
+    if service_url == '':
+        error_string = '该App下载数量已满'
+
+    return dict(service_url = service_url, error_string = error_string)
 
 @get('/api/appDeviceRecord')
 async def api_get_app_device_record(*, app_id):
