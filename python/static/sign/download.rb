@@ -10,6 +10,7 @@ password = ARGV[2]
 udid = ARGV[3]
 appid = ARGV[4]
 bundle_id = ARGV[5]
+profile_file = ARGV[6]
 
 time = Time.now.to_i.to_s
 
@@ -52,7 +53,7 @@ else
     end
 end
 
-File.write("static/sign/" + appid + ".mobileprovision", profile.download)
+File.write("static/sign/mobileprovision/" + profile_file + ".mobileprovision", profile.download)
 
 count_file_name = 'static/sign/devicecount/' + account.gsub('.', '_') + '.txt'
 if File.exist?(count_file_name)

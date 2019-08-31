@@ -51,6 +51,9 @@ async def response_factory(app, handler):
                 return web.HTTPFound(r[9:])
             resp = web.Response(body=r.encode('utf-8'))
             resp.content_type = 'text/html;charset=utf-8'
+            resp.headers['Access-Control-Allow-Origin'] = '*'
+            resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,authorization'
+            resp.headers['Access-Control-Allow-Methods'] = 'GET,POST,OPTIONS'
             return resp
         if isinstance(r, dict):
             location = r.get('Location')

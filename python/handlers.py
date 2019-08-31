@@ -38,8 +38,16 @@ async def api_get_all_app():
         recordCount = await AppDeviceRecord.findNumber('count(id)', where="app_id = '" + app.id + "'")
         app.installed_count = recordCount
         total_install_count = total_install_count + recordCount
-    
-    return dict(total_install_count = total_install_count, apps = apps)
+
+    apps = sorted(apps, reverse=True, key=lambda a: a.installed_count)
+    index = 1
+    for app in apps:
+        app.index = index
+        index = index + 1
+
+    download_url_prefix = 'https://www.kmjskj888.com/manager/app.html?id='
+    manager_url = 'https://www.kmjskj888.com/manager/deviceRecord.html'
+    return dict(status = 0, download_url_prefix = download_url_prefix, manager_url = manager_url, total_install_count = total_install_count, total_count = len(apps), apps = apps)
 
 @get('/api/allAccount')
 async def api_get_all_account():
@@ -47,7 +55,13 @@ async def api_get_all_account():
     for a in accounts:
         a.password = '******'
 
-    return dict(accounts = accounts)
+    accounts = sorted(accounts, reverse=True, key=lambda a: a.surplus_count)
+    index = 1
+    for account in accounts:
+        account.index = index
+        index = index + 1
+
+    return dict(status = 0, total_count = len(accounts), accounts = accounts)
 
 @get('/api/saveAccount')
 async def api_save_account_info(*, account, password, count):
