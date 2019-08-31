@@ -48,6 +48,7 @@ async def api_get_all_app():
     for app in show_apps:
         app.index = index
         app.icon_url = 'https://www.kmjskj888.com/images/icon_' + app.id + '.png'
+        app.slide_images = app.slide_images.split(',')
 
         if app.add_time != None and app.add_time > 0:
             timeArray = time.localtime(app.add_time / 1000 + 12 * 60 * 60)
@@ -91,9 +92,12 @@ async def api_get_app_info(*, id):
     app = await App.find(id)
     app.icon_path = 'https://www.kmjskj888.com/images/icon_' + id + '.png'
     if app.slide_images != None:
-        images = ['https://www.kmjskj888.com/images/' + app.slide_images]
+        image_names = app.slide_images.split(',')
+        images = []
+        for name in image_names:
+            images.append('https://www.kmjskj888.com/images/' + name)
     else:
-        images = ['http://www.kmjskj888.com/resource/image/slide_1.png', 'http://www.kmjskj888.com/resource/image/slide_2.png']
+        images = ['https://www.kmjskj888.com/images/slide_default_1.png', 'https://www.kmjskj888.com/images/slide_default_2.png']
     extendedInfos = [{'title' : '开发商', 'value' : app.developer},
                      {'title' : '大小', 'value' : str(app.size) + 'MB'},
                      {'title' : '类别', 'value' : '工具'},
@@ -103,7 +107,12 @@ async def api_get_app_info(*, id):
                      {'title' : '版权', 'value' : app.name}]
     udid_url = 'https://www.kmjskj888.com/configs/' + app.id + '.mobileconfig'
     jump_url = 'https://www.dibaqu.com/embedded.mobileprovision'
-    return dict(appInfo = app, images = images, extendedInfos = extendedInfos, udid_url = udid_url, jump_url = jump_url)
+    video_url = 'https://vod.y1f1.cn/sv/14b45e8c-16b503055cb/14b45e8c-16b503055cb.mp4'
+    banner_url = app.banner_image
+    if banner_url != None:
+        banner_url = 'https://www.kmjskj888.com/images/' + banner_url
+
+    return dict(appInfo = app, images = images, extendedInfos = extendedInfos, udid_url = udid_url, jump_url = jump_url, video_url = video_url, banner_url = banner_url)
 
 def parse_udid(xmlString):
     xml_decode_str = xmlString.decode('utf-8', errors='ignore')
