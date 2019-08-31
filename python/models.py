@@ -26,7 +26,9 @@ class App(Model):
     buy_count = IntegerField(default=100)
     slide_images = StringField(ddl='varchar(100)')
     is_prt = IntegerField(default=0)
-    
+    bundle_id = StringField(ddl='varchar(100)')
+    hidden = IntegerField(default=0)
+
 class AppDeviceRecord(Model):
     __table__ = 'app_device_record'
 

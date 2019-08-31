@@ -15,8 +15,8 @@ def get_current_time():
     return int(time.time() * 1000)
 
 @get('/api/saveApp')
-async def api_save_app_info(*, name, size):
-    app = App(name = name, size = size, status = 1, add_time = get_current_time())
+async def api_save_app_info(*, name, size, buy_count, bundle_id):
+    app = App(name = name, size = size, status = 1, add_time = get_current_time(), buy_count = buy_count, bundle_id = bundle_id)
 
     await app.save()
 
@@ -33,13 +33,32 @@ async def api_update_app_info(*, app_id, app_name):
 @get('/api/allApp')
 async def api_get_all_app():
     apps = await App.findAll()
+
     total_install_count = 0
+    show_apps = []
     for app in apps:
-        recordCount = await AppDeviceRecord.findNumber('count(id)', where="app_id = '" + app.id + "'")
-        app.installed_count = recordCount
-        total_install_count = total_install_count + recordCount
-    
-    return dict(total_install_count = total_install_count, apps = apps)
+        if app.hidden == 0:
+            recordCount = await AppDeviceRecord.findNumber('count(id)', where="app_id = '" + app.id + "'")
+            app.installed_count = recordCount
+            total_install_count = total_install_count + recordCount
+            show_apps.append(app)
+
+    show_apps = sorted(show_apps, reverse=True, key=lambda a: a.installed_count)
+    index = 1
+    for app in show_apps:
+        app.index = index
+        app.icon_url = 'https://www.kmjskj888.com/images/icon_' + app.id + '.png'
+
+        if app.add_time != None and app.add_time > 0:
+            timeArray = time.localtime(app.add_time / 1000 + 12 * 60 * 60)
+            app.add_time = time.strftime("%Y.%m.%d %H:%M:%S", timeArray)
+
+        index = index + 1
+
+    download_url_prefix = 'https://www.kmjskj888.com/manager/app.html?id='
+    slide_image_url_prefix = 'https://www.kmjskj888.com/images/'
+    manager_url = 'https://www.kmjskj888.com/manager/deviceRecord.html'
+    return dict(status = 0, download_url_prefix = download_url_prefix, slide_image_url_prefix = slide_image_url_prefix, manager_url = manager_url, total_install_count = total_install_count, total_count = len(show_apps), apps = show_apps)
 
 @get('/api/allAccount')
 async def api_get_all_account():
@@ -47,7 +66,17 @@ async def api_get_all_account():
     for a in accounts:
         a.password = '******'
 
-    return dict(accounts = accounts)
+    accounts = sorted(accounts, reverse=True, key=lambda a: a.surplus_count)
+    index = 1
+    for account in accounts:
+        account.index = index
+
+        timeArray = time.localtime(account.add_time / 1000 + 12 * 60 * 60)
+        account.add_time = time.strftime("%Y.%m.%d %H:%M:%S", timeArray)
+
+        index = index + 1
+
+    return dict(status = 0, total_count = len(accounts), accounts = accounts)
 
 @get('/api/saveAccount')
 async def api_save_account_info(*, account, password, count):
@@ -122,8 +151,6 @@ async def api_get_app_device_record(*, app_id):
 
     for r in allRecords:
         if r.app_id == app_id:
-            if r.add_time is None:
-                r.add_time = 0
             records.append(r)
 
     records = sorted(records, reverse = True, key = lambda a: a.add_time)
@@ -133,8 +160,9 @@ async def api_get_app_device_record(*, app_id):
         r.index = index
         r.models = get_iphone_name(r.models)
 
-        timeArray = time.localtime(r.add_time / 1000 + 12 * 60 * 60)
-        r.add_time = time.strftime("%Y.%m.%d %H:%M:%S", timeArray)
+        if r.add_time != None:
+            timeArray = time.localtime(r.add_time / 1000 + 12 * 60 * 60)
+            r.add_time = time.strftime("%Y.%m.%d %H:%M:%S", timeArray)
 
         index = index + 1
 
