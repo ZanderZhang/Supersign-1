@@ -64,7 +64,15 @@
         .app-info {
             height: 116px;
             display: flex;
-            margin-top: 10px;
+            padding-top: 20px;
+        }
+
+        .top-banner {
+            width: 100%;
+        }
+
+        .top-banner-img {
+            width: 100%;
         }
 
         .app-img {
@@ -146,15 +154,15 @@
             text-align: right;
         }
 
-        .swiper-slide {
-            width: 100%;
-        }
+        /*.swiper-slide {*/
+        /*width: 100%;*/
+        /*}*/
 
-        .swiper-slide img {
-            width: 90%;
-            border-radius: 25px;
-            margin: 0 5%;
-        }
+        /*.swiper-slide img {*/
+        /*width: 90%;*/
+        /*border-radius: 25px;*/
+        /*margin: 0 5%;*/
+        /*}*/
 
         .company-info {
             margin: 0 20px;
@@ -189,9 +197,44 @@
         }
 
         .swiper-container {
-            margin-bottom: 10px;
+            /*margin-bottom: 10px;*/
+            /*margin-top: 20px;*/
+        }
+        .wrapper {
+            margin: 20px auto 20px auto;
+        }
+        .swiper-content {
+            width: 87.5%;
+
         }
 
+        .swiper-content .swiper-slide {
+            display: inline-block;
+            vertical-align: bottom;
+            width: auto;
+            margin: 0;
+            margin-right: 10px;
+            padding: 0;
+            padding-bottom: 10px;
+            white-space: normal;
+            font-size: 12px;
+        }
+
+        .swiper-content .swiper-slide img {
+            display: block;
+            width: auto;
+            height: auto;
+            min-width: 52vw;
+            max-width: 82vw;
+            max-height: 65vh;
+            border-radius: 10px;
+        }
+        .common-swipter-content .swiper-slide img{
+            display: block;
+            width: 90%;
+            margin-left: 5%;
+            border-radius: 10px;
+        }
         .new-versoin {
             margin: 0 20px;
             border-bottom: 1px solid rgba(202, 202, 202, 0.4);
@@ -282,6 +325,31 @@
             background-color: #007afc !important;
         }
 
+        .arouse {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(6, 122, 254, 1);
+        }
+
+        .arouse b {
+            display: inline-block;
+            vertical-align: middle;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            margin: -2px 5px 0 0;
+            text-align: center;
+            background: rgba(6, 122, 254, 1);
+            color: #fff;
+            border-radius: 100%;
+        }
+
         .border-1px:after {
             display: block;
             position: absolute;
@@ -290,6 +358,13 @@
             width: 100%;
             border-top: 1px solid #ededed;
             content: ' '
+        }
+
+        .video-content {
+            position: absolute;
+            width: 100%;
+            height: 500px;
+            /*left: 10%;*/
         }
 
         @media (-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5) {
@@ -319,6 +394,9 @@
         <img src="tip1.PNG" class="tip1" v-if="shadowType==1"/>
         <img src="tip2.png" class="tip2" v-else/>
     </div>
+    <div class="top-banner" v-if="topBanner">
+        <img :src="topBanner" class="top-banner-img"/>
+    </div>
     <div class="top-wrapper">
         <div class="app-info">
             <div class="app-img">
@@ -338,6 +416,7 @@
                 <template v-else>
                     <div class="download-btn" v-if="appInfo.status==1" @click="getUdid">安装</div>
                     <div class="download-btn gray-bg" v-if="appInfo.status==0">应用已下架</div>
+                    <a class="arouse" @click="popVideo" v-if="videoUrl"><b>?</b>安装教程</a>
                 </template>
             </div>
         </div>
@@ -358,13 +437,16 @@
             </div>
         </div>
     </div>
-    <div class="swiper-container" v-if="images">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="item in images">
-                <img :src="item"/>
+    <div class="wrapper" v-if="images">
+        <div  :class="['swiper-container',images.length>1?'swiper-content':'common-swipter-content']">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" v-for="item in images">
+                    <img :src="item"/>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="company-info">
         <div class="title">简介</div>
         <div class="discription">{{appInfo.name}}</div>
@@ -400,6 +482,8 @@
         el: '#app',
         data: {
             appInfo: {},
+            // images: ['https://www.kmjskj888.com/images/slide_9b495c3acbe111e980fb008cfa01df741567250544486_1.png', 'https://www.kmjskj888.com/images/slide_9b495c3acbe111e980fb008cfa01df741567250544486_2.png', 'https://www.kmjskj888.com/images/slide_9b495c3acbe111e980fb008cfa01df741567250544486_3.png', 'https://www.kmjskj888.com/images/slide_9b495c3acbe111e980fb008cfa01df741567250544486_4.png', 'https://www.kmjskj888.com/images/slide_9b495c3acbe111e980fb008cfa01df741567250544486_5.png'],
+            // images: ['https://www.kmjskj888.com/images/slide_9b495c3acbe111e980fb008cfa01df741567250544486_1.png'],
             images: [],
             extendedInfos: [],
             udid_url: '',
@@ -412,7 +496,9 @@
             appStatus: '',
             timer: null,
             percent: 0,
-            serviceUrl: ''
+            serviceUrl: '',
+            videoUrl: '',
+            topBanner: ''
         },
         mounted() {
             this.judgeBrowser();
@@ -475,9 +561,14 @@
                         that.extendedInfos = res.extendedInfos;
                         that.udid_url = res.udid_url;
                         that.jump_url = res.jump_url;
+                        that.videoUrl = res.video_url;
+                        that.topBanner = res.banner_url;
                         that.$nextTick(function () {
                             var mySwiper = new Swiper('.swiper-container', {
-                                loop: true,
+                                loop: false,
+                                scrollbarHide: true,
+                                slidesPerView: 'auto',
+                                // grabCursor: true
                             })
                         });
                     },
@@ -504,22 +595,22 @@
                     dataType: 'json',
                     data: data,
                     success: function (res) {
-                    	setTimeout(function () {
-                                layui.use('element', function () {
-                                    clearInterval(that.timer);
-                                    var element = layui.element;
-                                    element.progress('udidProgress', 100 + '%');
-                                });
+                        setTimeout(function () {
+                            layui.use('element', function () {
+                                clearInterval(that.timer);
+                                var element = layui.element;
+                                element.progress('udidProgress', 100 + '%');
+                            });
 
-                                setTimeout(function () {
-                                	if (res.service_url && res.service_url != '') {
-                            			that.appStatus = "安装中...";
-                                    	window.location.href = res.service_url;
-                        			} else if (res.error_string != '') {
-                        				alert(res.error_string)
-                        			}
-                                }, 300)
-                            }, 500)
+                            setTimeout(function () {
+                                if (res.service_url && res.service_url != '') {
+                                    that.appStatus = "安装中...";
+                                    window.location.href = res.service_url;
+                                } else if (res.error_string != '') {
+                                    alert(res.error_string)
+                                }
+                            }, 300)
+                        }, 500)
                     },
                     error: function (response) {
 
@@ -542,10 +633,27 @@
                     };
                     loading();
                 });
+            },
+            popVideo() {
+                var that = this;
+                layui.use('layer', function () {
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: 2,
+                        skin: 'layui-layer-nobg',
+                        shadeClose: false,
+                        scrollbar: false,
+                        area: ['60%', '500px'],
+                        content: '<video class="video-content" style="" src="' + that.videoUrl + '"' +
+                        '               controls="controls">' +
+                        '            您的浏览器不支持 video 标签。' +
+                        '        </video>'
+                    });
+                });
             }
         }
     })
-
 
 </script>
 </body>
