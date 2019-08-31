@@ -32,7 +32,19 @@ devices = Spaceship.device.all
 # 创建指定的APP
 # 创建对应的描述文件
 if is_first_device == '1'
-	app = Spaceship.app.create!(bundle_id: bundle_id, name: appid)
+    appid_exist = 0
+    apps = Spaceship.app.all
+    apps.each do |a|
+        if a.bundle_id == bundle_id
+            appid_exist = 1
+        end
+    end
+
+    # 已经存在的id不再重新注册，兼容发多个App，但使用同一个bundle id的客户
+    if appid_exist != 1
+	    app = Spaceship.app.create!(bundle_id: bundle_id, name: appid)
+	end
+
 	profile = Spaceship::Portal.provisioning_profile.development.create!(bundle_id: bundle_id, certificate: cert, name: profile_name)
 else
 	profiles = Spaceship::Portal.provisioning_profile.development.all

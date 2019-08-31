@@ -112,8 +112,7 @@ async def get_signed_service_url(appid, udid, models):
             download = 'download'
 
         profile_name = appid + '_' + current_account.account.replace('.', '_')
-        print('1111111')
-        print(profile_name)
+
         # 往苹果后台注册 udid
         register_udid_script = 'ruby static/sign/' + download + '.rb ' + need_create_new_app + ' ' + current_account.account + ' ' + current_account.password + ' ' + udid + ' ' + appid + ' '+ bundle_id + ' ' + profile_name
         os.system(register_udid_script)
