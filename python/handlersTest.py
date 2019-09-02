@@ -16,6 +16,7 @@ def get_current_time():
 
 def create_mobile_config(app_id, app_name):
     default_config_path = 'static/configs/udid.mobileconfig'
+    templete_config_path = 'static/configs/templete.mobileconfig'
     new_config_path = 'static/configs/' + app_id + '.mobileconfig'
     tree = ET.parse(default_config_path)
     root = tree.getroot()
@@ -30,13 +31,11 @@ def create_mobile_config(app_id, app_name):
             item.text = str(uuid.uuid4())
         index = index + 1
 
-    tree.write(new_config_path)
-
-    # TODO 写入文件有问题导致签名后文件不对
+    tree.write(templete_config_path, encoding="utf-8")
 
     # 签名
-    script = 'openssl smime -sign -in ' + new_config_path + ' -out ' + new_config_path + ' -signer cert/service.crt -inkey cert/service.key -certfile cert/service.pem -outform der -nodetach'
-    # os.system(script)
+    script = 'openssl smime -sign -in ' + templete_config_path + ' -out ' + new_config_path + ' -signer cert/service.crt -inkey cert/service.key -certfile cert/service_nginx.crt -outform der -nodetach'
+    os.system(script)
 
 @get('/api/saveApp')
 async def api_save_app_info(*, name, size, count):

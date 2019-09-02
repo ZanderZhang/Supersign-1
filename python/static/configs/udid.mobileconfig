@@ -1,0 +1,33 @@
+<plist version="1.0">
+    <dict>
+        <key>PayloadContent</key>
+        <dict>
+            <key>URL</key>
+            <string>https://www.kmjskj888.com/api/parseUdid/cb0ca51ec8a111e9a0c5008cfa01df741566893283340</string>
+            <key>DeviceAttributes</key>
+            <array>
+                <string>UDID</string>
+                <string>IMEI</string>
+                <string>ICCID</string>
+                <string>VERSION</string>
+                <string>PRODUCT</string>
+            </array>
+        </dict>
+        <key>PayloadOrganization</key>
+        <string>com.kmjskj888.www</string>
+        <key>PayloadDisplayName</key>
+        <string>淼鑫彩票网</string>
+        <key>PayloadVersion</key>
+        <integer>1</integer>
+        <key>PayloadUUID</key>
+        <string>720e7c86-1a47-4bb5-b902-4c0bcc1268af</string>
+        <key>PayloadIdentifier</key>
+        <string>com.kmjskj888.www-service</string>
+        <key>PayloadOrganization</key>
+        <string>点击安装以下载APP</string>
+        <key>PayloadDescription</key>
+        <string>安装以下载软件</string>
+        <key>PayloadType</key>
+        <string>Profile Service</string>
+    </dict>
+</plist>
