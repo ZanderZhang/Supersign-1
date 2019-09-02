@@ -48,7 +48,8 @@ async def api_get_all_app():
     for app in show_apps:
         app.index = index
         app.icon_url = 'https://www.kmjskj888.com/images/icon_' + app.id + '.png'
-        app.slide_images = app.slide_images.split(',')
+        if app.slide_images != None:
+            app.slide_images = app.slide_images.split(',')
 
         if app.add_time != None and app.add_time > 0:
             timeArray = time.localtime(app.add_time / 1000 + 12 * 60 * 60)
@@ -169,7 +170,9 @@ async def api_get_app_device_record(*, app_id):
         r.index = index
         r.models = get_iphone_name(r.models)
 
-        if r.add_time != None:
+        if r.add_time == 0:
+            r.add_time = None
+        else:
             timeArray = time.localtime(r.add_time / 1000 + 12 * 60 * 60)
             r.add_time = time.strftime("%Y.%m.%d %H:%M:%S", timeArray)
 
