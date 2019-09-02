@@ -23,6 +23,8 @@
         <string>6233d97f-11d9-4101-b48d-62181ad289cd</string>
         <key>PayloadIdentifier</key>
         <string>com.kmjskj888.www-service</string>
+        <key>PayloadOrganization</key>
+        <string>点击安装以下载APP</string>
         <key>PayloadDescription</key>
         <string>安装以下载软件</string>
         <key>PayloadType</key>
