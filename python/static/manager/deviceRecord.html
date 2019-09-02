@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询设备数量</title>
+    <link rel="stylesheet" href="./layui/css/layui.css" media="all">
+    <script src="./layui/layui.js"></script>
+    <script src="jquery.js" type='text/javascript'></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .top-row {
+            position: relative;
+            height: 70px;
+            margin-bottom: 15px;
+        }
+
+        .appid-input {
+            width: 500px;
+            display: inline-block;
+            margin-bottom: 0;
+        }
+
+        .layui-input, .layui-textarea {
+            border-radius: 5px;
+        }
+
+        .search-btn {
+            margin-left: 10px;
+            height: 36px;
+            margin-bottom: 2px;
+        }
+
+        .table-content {
+            margin-top: 10px;
+        }
+
+        .device-number {
+            text-align: left;
+            display: none;
+        }
+
+        .about-icon {
+            margin-left: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .tip-label {
+            padding: 0;
+            margin: 9px 15px;
+        }
+
+        .app-info {
+            height: 70px;
+            position: absolute;
+            left: 0;
+            width: 20%;
+            text-align: left;
+            display: flex;
+        }
+
+        .app-logo {
+            height: 70px;
+            width: 70px;
+            border-radius: 15px;
+        }
+
+        .right-wrapper {
+            position: absolute;
+            width: 80%;
+            right: 0;
+            bottom: 0;
+            text-align: right;
+        }
+
+        .app-content {
+            display: inline-block;
+            height: 70px;
+            flex: 1;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .app-name {
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .app-size {
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            /*color: #999;*/
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-row">
+        <div class="app-info" style="display: none">
+            <img class="app-logo" src=""/>
+            <div class="app-content">
+                <div class="app-name"></div>
+                <div class="app-size">包大小：<span class="size"></span>M</div>
+            </div>
+        </div>
+        <div class="right-wrapper">
+            <div class="layui-form-item appid-input">
+                <label class="layui-form-label tip-label">APP ID<i class="layui-icon layui-icon-tips about-icon"></i>
+                </label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" required lay-verify="required" placeholder="请输入APP ID"
+                           autocomplete="off" class="layui-input appid">
+                </div>
+            </div>
+            <button type="button" class="layui-btn search-btn">查询</button>
+        </div>
+    </div>
+    <div class="device-number">总设备数：<span class="number"></span></div>
+    <table class="table-content" id="deviceRecord" lay-filter="storeHouseCreate" style="display: none"></table>
+</div>
+<script>
+    layui.use(['table', 'jquery', 'layer'], function () {
+        var table = layui.table;
+        var $ = layui.$;
+
+        function getAppInfo(id) {
+            var data = {id: id};
+            $.ajax({
+                url: "https://www.kmjskj888.com/api/appInfo",
+                type: 'get',
+                dataType: 'json',
+                data: data,
+                success: function (res) {
+                    if (res.appInfo) {
+                        $(".app-logo").attr('src', res.appInfo.icon_path);
+                        $(".app-name").html(res.appInfo.name);
+                        $(".app-size .size").html(res.appInfo.size);
+                        $(".app-info").show();
+                    } else {
+                        $(".app-info").hide();
+                    }
+                },
+                error: function (response) {
+                    $(".app-info").hide();
+                }
+            });
+        }
+
+        function tableInit(id) {
+
+            //第一个实例
+            table.render({
+                elem: '#deviceRecord'
+                , height: 500
+                // , limit: 5
+                , method: 'get'
+                , where: {app_id: id}
+                , url: 'https://www.kmjskj888.com/api/appDeviceRecord' //数据接口
+                // , page: true //开启分页
+                , parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "code": res.status, //解析接口状态
+                        // "msg": res.message, //解析提示文本
+                        "count": res.total, //解析数据长度
+                        "data": res.data //解析数据列表
+                    };
+                }
+                , cols: [[ //表头
+                    {field: 'index', title: '序号', width: 80},
+                    {field: 'udid', title: '设备ID'},
+                    {field: 'models', title: '设备型号'},
+                    {field: 'add_time', title: '首次安装时间'}
+                ]]
+                , done: function (res, curr, count) {
+                    $(".table-content").show();
+                    $(".device-number .number").text(res.count);
+                    $(".device-number").show();
+
+                }
+            });
+
+
+        }
+
+        $(".about-icon").click(function () {
+            layer.tips('APP ID 为下载链接后面的参数', '.layui-form-label', {
+                tips: [3, '#3595CC'],
+                time: 3000
+            });
+        });
+
+        $(".search-btn").click(function () {
+            var val = $(".appid").val();
+            if (val == '') {
+                layer.msg('请输入APP ID');
+                return;
+            }
+            tableInit(val);
+            getAppInfo(val);
+        });
+    })
+
+
+</script>
+</body>
+</html>

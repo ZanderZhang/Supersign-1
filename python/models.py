@@ -24,9 +24,12 @@ class App(Model):
     developer = StringField(default='AppleDeveloper')
     add_time = FloatField(default=0)
     buy_count = IntegerField(default=100)
-    slide_images = StringField(ddl='varchar(100)')
+    slide_images = StringField(ddl='varchar(300)')
+    banner_image = StringField(ddl='varchar(100)')
     is_prt = IntegerField(default=0)
-    
+    bundle_id = StringField(ddl='varchar(100)')
+    hidden = IntegerField(default=0)
+
 class AppDeviceRecord(Model):
     __table__ = 'app_device_record'
 
