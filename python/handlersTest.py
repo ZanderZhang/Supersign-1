@@ -37,6 +37,15 @@ def create_mobile_config(app_id, app_name):
     script = 'openssl smime -sign -in ' + templete_config_path + ' -out ' + new_config_path + ' -signer cert/service.crt -inkey cert/service.key -certfile cert/service_nginx.crt -outform der -nodetach'
     os.system(script)
 
+
+@get('/api/test')
+async def api_test():
+    apps = await App.findAll()
+    for app in apps:
+        create_mobile_config(app.id, app.name)
+
+    return dict()
+
 @get('/api/saveApp')
 async def api_save_app_info(*, name, size, count):
     app = App(name = name, size = size, status = 1, surplus_count = count, add_time = get_current_time())
