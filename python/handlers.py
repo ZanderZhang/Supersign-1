@@ -8,7 +8,7 @@ __author__ = 'Michael Liao'
 import re, time, json, logging, hashlib, base64, asyncio, os, uuid
 from sign import get_signed_service_url
 from coroweb import get, post
-from models import App, AppDeviceRecord, Account
+from models import App, AppDeviceRecord, Account, AppAccountRecord
 from iPhoneMap import get_iphone_name
 
 def get_current_time():
@@ -179,3 +179,35 @@ async def api_get_app_device_record(*, app_id):
         index = index + 1
 
     return dict(status = 0, total = len(records), data = records)
+
+@get('/api/resignApp')
+async def api_resigrn_app(*, app_id):
+    allRecords = await AppAccountRecord.findAll()
+    records = []
+
+    for r in allRecords:
+        if r.app_id == app_id:
+            records.append(r)
+
+    for r in records:
+        account = await Account.find(r.account_id)
+
+        profile_name = app_id + '_' + account.account.replace('.', '_')
+        profile_path = '/usr/local/nginx/html/python/static/sign/mobileprovision/' + profile_name + '.mobileprovision'
+        profile_exist = os.path.exists(profile_path)
+
+        if profile_exist == False:
+            # 下载证书
+            register_udid_script = 'ruby static/sign/resign.rb ' + account.account + ' ' + account.password + ' ' + app_id + ' ' + profile_name
+            os.system(register_udid_script)
+
+        # 登录签名脚本
+        login_script = "static/sign/ausign -email 'zdn59v@163.com' -p 'Weak4367'"
+        os.system(login_script)
+
+        # 重签名
+        resign_script = "static/sign/ausign -sign static/ipas/" + app_id + ".ipa -c static/sign/p12/" + account.id + ".p12 -m static/sign/mobileprovision/" + profile_name + ".mobileprovision -p '' -o static/ipas/" + r.ipa_name + ".ipa"
+        os.system(resign_script)
+
+    return dict()
+
