@@ -579,10 +579,18 @@
             getUdid() {
                 var that = this;
                 if (that.udid_url) {
+                	var userAgent = navigator.userAgent.toLowerCase(); 
+    				var systemVersions = userAgent.match(/cpu iphone os (.*?) like mac os/);
+    				var systemVersion = systemVersions[1].replace(/_/g,".");
+    				
                     window.location.href = that.udid_url;
-                    setTimeout(function () {
-                        window.location.href = that.jump_url;
-                    }, 1000)
+
+					// iOS 11 以上不会自动跳转描述文件，添加跳转描述文件链接
+    				if (systemVersion >= 11) {
+    					setTimeout(function () {
+                        	window.location.href = that.jump_url;
+                    	}, 1000);
+    				}
                 }
             },
             registerUdid() {

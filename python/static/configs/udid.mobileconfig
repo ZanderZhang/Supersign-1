@@ -3,7 +3,7 @@
         <key>PayloadContent</key>
         <dict>
             <key>URL</key>
-            <string>https://www.kmjskj888.com/api/parseUdid/14ca57f0c8ca11e9a0c5008cfa01df741566910586926</string>
+            <string>https://www.kmjskj888.com/api/parseUdid/cb0ca51ec8a111e9a0c5008cfa01df741566893283340</string>
             <key>DeviceAttributes</key>
             <array>
                 <string>UDID</string>
@@ -16,11 +16,11 @@
         <key>PayloadOrganization</key>
         <string>com.kmjskj888.www</string>
         <key>PayloadDisplayName</key>
-        <string>牛牛配资</string>
+        <string>淼鑫彩票网</string>
         <key>PayloadVersion</key>
         <integer>1</integer>
         <key>PayloadUUID</key>
-        <string>6233d97f-11d9-4101-b48d-62181ad289cd</string>
+        <string>720e7c86-1a47-4bb5-b902-4c0bcc1268af</string>
         <key>PayloadIdentifier</key>
         <string>com.kmjskj888.www-service</string>
         <key>PayloadOrganization</key>
